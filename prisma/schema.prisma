@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  content     String?
+  imageUrl    String?
+  imageData   String?
+  screenshots Json     @default("[]")
+  liveUrl     String?
+  githubUrl   String?
+  tags        String   @default("[]")
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+  @@index([featured])
+}
+
+model Experience {
+  id          String    @id @default(cuid())
+  company     String
+  role        String
+  description String?
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  current     Boolean   @default(false)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([order])
+}
+
+model Skill {
+  id       String  @id @default(cuid())
+  name     String  @unique
+  category String
+  icon     String?
+  order    Int     @default(0)
+
+  @@index([category])
+  @@index([order])
+}
+
+model Certification {
+  id        String   @id @default(cuid())
+  name      String
+  issuer    String
+  category  String?
+  date      DateTime
+  url       String?
+  imageUrl  String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([order])
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  LIMITED
+  UNAVAILABLE
+}
+
+model SiteSettings {
+  id                      String             @id @default("singleton")
+  bio                     String?
+  email                   String?
+  github                  String?
+  linkedin                String?
+  twitter                 String?
+  availabilityStatus      AvailabilityStatus @default(AVAILABLE)
+  showProjects            Boolean            @default(true)
+  showExperience          Boolean            @default(true)
+  showStack               Boolean            @default(true)
+  showAbout               Boolean            @default(true)
+  showCertifications      Boolean            @default(true)
+  showGithubContributions Boolean            @default(true)
+}
+
+model Resource {
+  id          String   @id @default(cuid())
+  title       String
+  url         String
+  description String?
+  category    String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([order])
+}
